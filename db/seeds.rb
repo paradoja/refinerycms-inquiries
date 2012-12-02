@@ -8,7 +8,7 @@
   end if defined?(::Refinery::User)
 
   if defined?(::Refinery::Page)
-    unless Refinery::Page.where(:menu_match => '/contact').any?
+    unless Refinery::Page.where(:link_url => '/contact').any?
       contact_us_page = ::Refinery::Page.create({
                                                   :title => "Contact",
                                                   :link_url => "/contact",
@@ -27,7 +27,7 @@
                                    })
     end
 
-    unless Refinery::Page.where(:menu_match => '/contact/thank_you').any?
+    unless Refinery::Page.where(:link_url => '/contact/thank_you').any?
       thank_you_page = contact_us_page.children.create({
                                                          :title => "Thank You",
                                                          :link_url => "/contact/thank_you",
