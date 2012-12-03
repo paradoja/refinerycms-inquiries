@@ -1,17 +1,14 @@
+::Refinery::User.all.each do |user|
+  if user.plugins.where(:name => 'refinery_inquiries').blank?
+    user.plugins.create(:name => "refinery_inquiries")
+  end
+end if defined?(::Refinery::User)
+
 (Refinery.i18n_enabled? ? Refinery::I18n.frontend_locales : [:en]).each do |lang|
   I18n.locale = lang
 
-  ::Refinery::User.all.each do |user|
-    if user.plugins.where(:name => 'refinery_inquiries').blank?
-      user.plugins.create(:name => "refinery_inquiries")
-    end
-  end if defined?(::Refinery::User)
-
   if defined?(::Refinery::Page)
-    contact_pages = Refinery::Page.where(:link_url => '/contact')
-    if contact_pages.any?
-      contact_us_page = contact_pages.first
-    else
+    unless Refinery::Page.where(:link_url => '/contact').any?
       contact_us_page = ::Refinery::Page.create({
                                                   :title => "Contact",
                                                   :link_url => "/contact",
@@ -30,7 +27,7 @@
                                    })
     end
 
-    unless Refinery::Page.where(:link_url => '/contact/thank_you').any?
+    unless Refinery::Page.where(:link_url => '/contact/thank_you').any? or contact_us_page.blank?
       thank_you_page = contact_us_page.children.create({
                                                          :title => "Thank You",
                                                          :link_url => "/contact/thank_you",
@@ -45,7 +42,7 @@
                                   })
     end
 
-    unless Refinery::Page.by_title('Privacy Policy').any?
+    unless Refinery::Page.by_title('Privacy Policy').any? or contact_us_page.blank?
       privacy_policy_page = contact_us_page.children.create({
                                                               :title => "Privacy Policy",
                                                               :deletable => true,
