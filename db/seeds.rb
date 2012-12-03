@@ -8,7 +8,8 @@
   end if defined?(::Refinery::User)
 
   if defined?(::Refinery::Page)
-    if contact_pages = Refinery::Page.where(:link_url => '/contact').any?
+    contact_pages = Refinery::Page.where(:link_url => '/contact')
+    if contact_pages.any?
       contact_us_page = contact_pages.first
     else
       contact_us_page = ::Refinery::Page.create({
